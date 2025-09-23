@@ -1,0 +1,73 @@
+{
+  "name": "wipro-audio-streamer",
+  "version": "1.0.0",
+  "description": "Wipro Desktop Audio Streamer with Socket.IO and Speaker Playback",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-portable": "electron-builder --win portable",
+    "dist": "npm run build"
+  },
+  "keywords": ["electron", "audio", "streaming", "socketio", "wipro"],
+  "author": "Wipro GenAI Foundry",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.6.4"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.2",
+    "electron-audio-loopback": "^1.0.3"
+  },
+  "build": {
+    "appId": "com.wipro.audiostreamer",
+    "productName": "Wipro Audio Streamer",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "main.js",
+      "preload.js", 
+      "index.html",
+      "renderer.js",
+      "styles.css",
+      "socket.io.min.js",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable", 
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "publisherName": "Wipro Limited",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico", 
+      "installerHeaderIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Wipro Audio Streamer",
+      "artifactName": "WiproAudioStreamer-Setup-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "WiproAudioStreamer-Portable-${version}.exe"
+    }
+  }
+}

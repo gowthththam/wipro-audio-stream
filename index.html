@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wipro Audio Streamer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="outer-container">
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo-container">
+          <img
+            src="assets/wiproLogoBig.png"
+            alt="Wipro Logo"
+            class="logo"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="logo-fallback" style="display: none;">WIPRO</div>
+        </div>
+        <div class="brand-info">
+          <div class="call-insight">
+            <div class="phone-icon">🎵</div>
+            <span class="title">Audio Streamer</span>
+          </div>
+          <span class="subtitle">Desktop Audio Capture & Playback</span>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Connection Status -->
+        <div
+          id="connectionStatus"
+          class="connection-status disconnected"
+          style="display: none"
+        >
+          <div class="status-dot"></div>
+          <span id="connectionText">Disconnected</span>
+        </div>
+
+        <!-- Status Display -->
+        <div class="status-container">
+          <div id="statusIndicator" class="status-indicator idle">
+            <span id="statusIcon">🎤</span>
+          </div>
+          <div id="statusText" class="status-text">Ready to Stream</div>
+          <div id="statusDescription" class="status-description">
+            System audio capture and speaker playback ready
+          </div>
+
+          <!-- Audio Visualizer -->
+          <div id="audioVisualizer" class="audio-visualizer">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+          </div>
+
+          <!-- Volume Meter -->
+          <div id="volumeMeter" class="volume-meter">
+            <div class="volume-label">Audio Level</div>
+            <div class="volume-bar-container">
+              <div id="volumeBar" class="volume-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Control Button -->
+        <button id="startCapture" class="control-button">Start Audio Streaming</button>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel">
+          <div class="setting-item">
+            <label for="serverUrl">Server URL:</label>
+            <input
+              type="text"
+              id="serverUrl"
+              value="https://wipgenai.lwpcoe.com"
+              readonly
+            />
+          </div>
+          <div class="setting-item">
+            <label for="socketPath">Socket Path:</label>
+            <input type="text" id="socketPath" value="/vqa_live/socket.io/" readonly />
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer fixed at bottom -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="copyright">© 2025 Wipro Limited. All rights reserved.</div>
+      <div class="version">Audio Streamer v1.0.0 | Desktop Edition</div>
+    </div>
+  </footer>
+
+  <!-- Audio Elements for Playback -->
+  <audio id="playbackAudio" autoplay style="display: none"></audio>
+
+  <script src="socket.io.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
