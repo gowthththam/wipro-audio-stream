@@ -31,13 +31,19 @@
     },
     "files": [
       "main.js",
-      "preload.js", 
+      "preload.js",
       "index.html",
       "renderer.js",
       "styles.css",
       "socket.io.min.js",
       "assets/**/*",
       "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/electron/dist/ffmpeg.dll",
+        "to": "ffmpeg.dll"
+      }
     ],
     "win": {
       "target": [
@@ -46,7 +52,7 @@
           "arch": ["x64"]
         },
         {
-          "target": "portable", 
+          "target": "portable",
           "arch": ["x64"]
         }
       ],
@@ -59,7 +65,7 @@
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "assets/icon.ico",
-      "uninstallerIcon": "assets/icon.ico", 
+      "uninstallerIcon": "assets/icon.ico",
       "installerHeaderIcon": "assets/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
