@@ -11,7 +11,13 @@
     "build-portable": "electron-builder --win portable",
     "dist": "npm run build"
   },
-  "keywords": ["electron", "audio", "streaming", "socketio", "wipro"],
+  "keywords": [
+    "electron",
+    "audio",
+    "streaming",
+    "socketio",
+    "wipro"
+  ],
   "author": "Wipro GenAI Foundry",
   "license": "MIT",
   "devDependencies": {
@@ -19,8 +25,12 @@
     "electron-builder": "^24.6.4"
   },
   "dependencies": {
-    "socket.io-client": "^4.7.2",
-    "electron-audio-loopback": "^1.0.3"
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "electron-audio-loopback": "^1.0.3",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "socket.io-client": "^4.7.2"
   },
   "build": {
     "appId": "com.wipro.audiostreamer",
@@ -49,11 +59,15 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/icon.ico",

@@ -1,10 +1,64 @@
 const { app, BrowserWindow, desktopCapturer, ipcMain, Menu, session } = require('electron');
 const path = require('path');
+// Express server for local token relay
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 // Initialize audio loopback for system audio capture
 const { initMain } = require('electron-audio-loopback');
 
 let mainWindow;
+
+// Localhost server config
+const LOCAL_PORT = 4545;
+let latestToken = null;
+
+function startLocalServer() {
+  const appServer = express();
+  appServer.use(cors({
+    origin: 'http://localhost:8080', // <-- set to your web app URL
+    credentials: true
+  }));
+  appServer.use(bodyParser.json());
+
+  // Receive token from web app
+  appServer.post('/token', (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ error: 'No token provided' });
+    }
+    console.log('Received Azure AD token:', token);
+    latestToken = token;
+    
+    // Send token to renderer process immediately
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('token-received', token);
+    }
+    
+    forwardTokenToBackend(token);
+    res.json({ status: 'Token received' });
+  });
+
+  appServer.listen(LOCAL_PORT, () => {
+    console.log(`Electron local server listening on http://localhost:${LOCAL_PORT}`);
+  });
+}
+
+async function forwardTokenToBackend(token) {
+  try {
+    const fetch = (...args) => import('node-fetch').then(m => m.default(...args));
+    const response = await fetch('https://api.mydomain.com/electron-auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await response.json();
+    console.log('Backend response:', data);
+  } catch (err) {
+    console.error('Error forwarding token to backend:', err);
+  }
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -105,6 +159,7 @@ function setupAudioHandlers() {
   });
 }
 
+// ✅ FIXED: Register IPC handlers ONCE, outside any event listeners
 ipcMain.handle('get-desktop-sources', async () => {
   try {
     const sources = await desktopCapturer.getSources({
@@ -118,22 +173,55 @@ ipcMain.handle('get-desktop-sources', async () => {
   }
 });
 
-app.whenReady().then(() => {
-  initMain(); // call once
-
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+// ✅ FIXED: Register token handler ONCE
+ipcMain.handle('get-current-token', async () => {
+  console.log('get-current-token called, returning:', latestToken ? 'Token exists' : 'No token');
+  return latestToken;
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
-
+// ✅ Prevent new windows from opening
 app.on('web-contents-created', (event, contents) => {
   contents.on('new-window', (event) => {
     event.preventDefault();
   });
+  
+  // Also handle will-navigate to prevent navigation
+  contents.on('will-navigate', (event, navigationUrl) => {
+    const parsedUrl = new URL(navigationUrl);
+    // Allow only local file navigation
+    if (parsedUrl.protocol !== 'file:') {
+      event.preventDefault();
+    }
+  });
+});
+
+app.whenReady().then(() => {
+  initMain(); // Initialize audio loopback
+  startLocalServer(); // Start the local HTTP server for token relay
+  createWindow();
+  
+  // Log the latest token (if any) when app is loaded
+  if (latestToken) {
+    console.log('Latest Azure AD token on app load:', latestToken);
+  } else {
+    console.log('No Azure AD token received yet on app load.');
+  }
+  
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+// ✅ Cleanup on quit
+app.on('before-quit', () => {
+  console.log('Application quitting, cleaning up...');
+  latestToken = null;
 });
