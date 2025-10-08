@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
             int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
           }
 
-          socket.emit("agent_audio_chunk", int16.buffer);
+          socket.emit("audio_chunk", int16.buffer);
         } catch (processingError) {
           console.error('❌ Audio processing error:', processingError);
         }
