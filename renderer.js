@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let processor = null;
 
   // Configuration for backend Socket.IO
-   const SOCKET_URL = "http://localhost:5000";
-  const SOCKET_PATH = "/socket.io/";
+const SOCKET_URL = "https://wipgenai.lwpcoe.com";
+const SOCKET_PATH = "/vqa_live_v2/socket.io/";
+
 
   function updateStatus(status, text, description, icon) {
     statusIndicator.className = `status-indicator ${status}`;
