@@ -1,5 +1,0 @@
-# Azure Blob Storage Configuration (Using SAS Token)
-VITE_AZURE_STORAGE_ACCOUNT_NAME=enterprisegptdrive
-VITE_AZURE_STORAGE_CONTAINER_NAME=vqa
-VITE_AZURE_STORAGE_SAS_TOKEN=sp=rawdl&st=2025-09-09T08:52:07Z&se=2026-01-09T17:07:07Z&sv=2024-11-04&sr=c&sig=6N5BuB0HINGPgLtA%2BQdfGUQGHEl2lM4Kgv4ofvSogX4%3D
-VITE_AZURE_STORAGE_SAS_URL=https://enterprisegptdrive.blob.core.windows.net/vqa?sp=rawdl&st=2025-09-09T08:52:07Z&se=2026-01-09T17:07:07Z&sv=2024-11-04&sr=c&sig=6N5BuB0HINGPgLtA%2BQdfGUQGHEl2lM4Kgv4ofvSogX4%3D
